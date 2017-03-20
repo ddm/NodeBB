@@ -43,18 +43,24 @@ services:
         gelf-address: udp://localhost:12201
 
   nodebb:
-    image: dimdm/nodebb
+    image: dimdm/nodebb:alpine
     container_name: nodebb
     environment:
       - "NODE_ENV=production"
     command: ./docker-start.sh
     volumes:
-      - ./docker-start.sh:/opt/nodebb/docker-start.sh
-      - ./config.json:/opt/nodebb/config.json
+      - ./docker-start.sh:/opt/nodebb/docker-start.sh:ro
+      - ./config.json:/opt/nodebb/config.json:rw
     links:
       - redis
     ports:
       - 4567:4567
+    depends_on:
+      - logstash
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:12201
 
   grafana:
     image: grafana/grafana
