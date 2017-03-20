@@ -1,7 +1,4 @@
-FROM node:alpine
+FROM dimdm/c9:alpine
 
-COPY . /opt/nodebb
-WORKDIR /opt/nodebb
-RUN npm install
-
-EXPOSE 4567
+EXPOSE 8181
+EXPOSE 8282

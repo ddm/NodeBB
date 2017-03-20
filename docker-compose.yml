@@ -43,7 +43,7 @@ services:
         gelf-address: udp://localhost:12201
 
   nodebb:
-    image: dimdm/c9:alpine
+    image: dimdm/nodebb:c9
     container_name: nodebb
     restart: always
     environment:
@@ -51,7 +51,13 @@ services:
       - "IP=0.0.0.0"
       - "PORT=8181"
     volumes:
-      - .:/workspace/nodebb/
+      - ./src/:/workspace/src/
+      - ./test/:/workspace/test/
+      - ./install/:/workspace/install/
+      - ./public/:/workspace/public/
+      - ./app.js:/workspace/app.js
+      - ./config.json:/workspace/config.json
+      - ./package.json:/workspace/package.json
     links:
       - redis
     ports:
