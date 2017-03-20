@@ -1,0 +1,88 @@
+version: "3"
+
+services:
+  elasticsearch:
+    image: elasticsearch:alpine
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  logstash:
+    image: dimdm/logstash
+    container_name: logstash
+    links:
+      - elasticsearch
+    ports:
+      - 12201:12201/udp
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+    depends_on:
+      - logstash
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:12201
+
+  redis-commander:
+    image: dimdm/redis-commander
+    container_name: redis-commander
+    ports:
+      - 8081:8081
+    links:
+      - redis
+    depends_on:
+      - logstash
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:12201
+
+  nodebb:
+    image: dimdm/nodebb
+    container_name: nodebb
+    environment:
+      - "NODE_ENV=production"
+    command: ./docker-start.sh
+    volumes:
+      - ./docker-start.sh:/opt/nodebb/docker-start.sh
+      - ./config.json:/opt/nodebb/config.json
+    links:
+      - redis
+    ports:
+      - 4567:4567
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    links:
+      - elasticsearch
+    ports:
+      - 3000:3000
+
+  kibana:
+    image: kibana
+    container_name: kibana
+    links:
+      - elasticsearch
+    ports:
+      - 5601:5601
+
+  weave:
+    image: weaveworks/scope
+    container_name: weave
+    privileged: true
+    pid: host
+    labels:
+      - works.weave.role=system
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - "CHECKPOINT_DISABLE=true"
+    command: --probe.docker true
+    ports:
+      - 4040:4040
