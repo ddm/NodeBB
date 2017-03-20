@@ -43,18 +43,20 @@ services:
         gelf-address: udp://localhost:12201
 
   nodebb:
-    image: dimdm/nodebb:alpine
+    image: dimdm/c9:alpine
     container_name: nodebb
+    restart: always
     environment:
       - "NODE_ENV=production"
-    command: ./docker-start.sh
+      - "IP=0.0.0.0"
+      - "PORT=8181"
     volumes:
-      - ./docker-start.sh:/opt/nodebb/docker-start.sh:ro
-      - ./config.json:/opt/nodebb/config.json:rw
+      - .:/workspace/nodebb/
     links:
       - redis
     ports:
-      - 4567:4567
+      - 8181:8181
+      - 8282:8282
     depends_on:
       - logstash
     logging:

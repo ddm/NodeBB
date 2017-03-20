@@ -1,8 +1,8 @@
 {
-    "url": "http://nodebb:4567",
+    "url": "http://localhost:8282",
     "secret": "24fff202-230d-4c74-9ed7-1a70aa2343a2",
     "database": "redis",
-    "port": 4567,
+    "port": 8282,
     "redis": {
         "host": "redis",
         "port": "6379",
