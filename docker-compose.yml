@@ -56,6 +56,7 @@ services:
       - ./install/:/workspace/install/
       - ./public/:/workspace/public/
       - ./app.js:/workspace/app.js
+      - ./bcrypt.js:/workspace/bcrypt.js
       - ./config.json:/workspace/config.json
       - ./package.json:/workspace/package.json
     links:
