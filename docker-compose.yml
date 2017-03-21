@@ -59,6 +59,7 @@ services:
       - ./bcrypt.js:/workspace/bcrypt.js
       - ./config.json:/workspace/config.json
       - ./package.json:/workspace/package.json
+      - ./Gruntfile.js:/workspace/Gruntfile.js
     links:
       - redis
     ports:
