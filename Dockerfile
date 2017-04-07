@@ -7,5 +7,5 @@ WORKDIR /opt/nodebb
 RUN npm install
 
 EXPOSE 4567
-CMD app --start
+CMD node app --start
 
